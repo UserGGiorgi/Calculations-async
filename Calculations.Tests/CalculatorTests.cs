@@ -47,8 +47,8 @@ namespace Calculations.Tests
         {
             using var cancelTokenSource = new CancellationTokenSource();
 
-            (int index, long value) lastValue = (0, 0);
-            var progress = new Progress<(int, long)>(p => (lastValue.index, lastValue.value) = (p.Item1, p.Item2));
+            (int index, long value) = (0, 0);
+            var progress = new Progress<(int, long)>(p => (index, value) = (p.Item1, p.Item2));
             var calculationTask = CalculateSumAsync(n, cancelTokenSource.Token, progress);
 
             if (cancel)
@@ -65,12 +65,12 @@ namespace Calculations.Tests
             catch (OperationCanceledException)
             {
                 Console.WriteLine($"Current status of task: {calculationTask.Status}.");
-                Console.WriteLine($"Current value of sum: {lastValue.Item2} at the index: {lastValue.Item1}.");
-                return lastValue.value != expectedSum;
+                Console.WriteLine($"Current value of sum: {value} at the index: {index}.");
+                return value != expectedSum;
             }
 
             Console.WriteLine($"Current status of task: {calculationTask.Status}.");
-            Console.WriteLine($"Current value of sum: {lastValue.value} at the index: {lastValue.index}.");
+            Console.WriteLine($"Current value of sum: {value} at the index: {index}.");
             Console.WriteLine($"Current value of sum: {sum}.");
 
             return sum != expectedSum;
